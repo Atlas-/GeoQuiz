@@ -1,17 +1,27 @@
 package io.poundcode.geoquiz;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class QuizActivity extends AppCompatActivity {
+    @Bind(R.id.button_true)
+    Button mTrue;
+    @Bind(R.id.button_false)
+    Button mFalse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -34,5 +44,15 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.button_true)
+    public void onClickTrue() {
+        Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.button_false)
+    public void onClickFalse() {
+        Toast.makeText(this, R.string.incorrect, Toast.LENGTH_SHORT).show();
     }
 }
