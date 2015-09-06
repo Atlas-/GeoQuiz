@@ -5,23 +5,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.poundcode.geoquiz.models.Question;
 
 public class QuizActivity extends AppCompatActivity {
     @Bind(R.id.button_true)
     Button mTrue;
     @Bind(R.id.button_false)
     Button mFalse;
+    @Bind(R.id.button_next)
+    Button mNext;
+    @Bind(R.id.question)
+    TextView mQuestion;
+    private Question[] mQuestions = new Question[]{
+            new Question(R.string.question_oceans, true),
+            new Question(R.string.question_africa, false),
+            new Question(R.string.question_asia, true),
+            new Question(R.string.question_americas, true),
+            new Question(R.string.question_mideast, false)
+    };
+    private int mCurrentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
         ButterKnife.bind(this);
+        updateQuestion();
     }
 
     @Override
@@ -48,11 +63,35 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_true)
     public void onClickTrue() {
-        Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
+        checkAnswer(true);
     }
 
     @OnClick(R.id.button_false)
     public void onClickFalse() {
-        Toast.makeText(this, R.string.incorrect, Toast.LENGTH_SHORT).show();
+        checkAnswer(false);
+    }
+
+    @OnClick(R.id.button_next)
+    public void onClickNext() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestions.length;
+        updateQuestion();
+    }
+
+    public void updateQuestion() {
+        int question = mQuestions[mCurrentIndex].getTextResId();
+        mQuestion.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean isAnswerTrue = mQuestions[mCurrentIndex].isAnswerTrue();
+        int messageResId = 0;
+
+        if(userPressedTrue == isAnswerTrue) {
+            messageResId = R.string.correct;
+        }
+        else {
+            messageResId = R.string.incorrect;
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 }
