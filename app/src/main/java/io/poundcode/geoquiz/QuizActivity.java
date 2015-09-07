@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,9 @@ public class QuizActivity extends AppCompatActivity {
     @Bind(R.id.button_false)
     Button mFalse;
     @Bind(R.id.button_next)
-    Button mNext;
+    ImageButton mNext;
+    @Bind(R.id.button_previous)
+    ImageButton mPrevious;
     @Bind(R.id.question)
     TextView mQuestion;
     private Question[] mQuestions = new Question[]{
@@ -77,9 +80,25 @@ public class QuizActivity extends AppCompatActivity {
         updateQuestion();
     }
 
+    @OnClick(R.id.button_previous)
+    public void onClickPrevious() {
+        if(mCurrentIndex == 0) {
+            mCurrentIndex = mQuestions.length -1;
+        }else {
+            mCurrentIndex = (mCurrentIndex - 1) % mQuestions.length;
+        }
+        updateQuestion();
+    }
+
     public void updateQuestion() {
         int question = mQuestions[mCurrentIndex].getTextResId();
         mQuestion.setText(question);
+    }
+
+    @OnClick(R.id.question)
+    public void onClickQuestion() {
+        int next =  (mCurrentIndex + 1) % mQuestions.length;
+        Toast.makeText(this, mQuestions[next].getTextResId(), Toast.LENGTH_SHORT).show();
     }
 
     private void checkAnswer(boolean userPressedTrue) {
